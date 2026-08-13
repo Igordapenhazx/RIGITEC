@@ -1,0 +1,146 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "username": "Rigitec",
+      "password": "1234",
+      "defaultPassword": "1234",
+      "role": "Usuário da empresa",
+      "access": "usuario",
+      "active": true
+    },
+    {
+      "id": 2,
+      "username": "Matheus",
+      "password": "m2007",
+      "defaultPassword": "m2007",
+      "role": "Administrador geral",
+      "access": "admin",
+      "active": true
+    },
+    {
+      "id": 3,
+      "username": "Daniel",
+      "password": "1995",
+      "defaultPassword": "1995",
+      "role": "Almoxarifado B",
+      "access": "usuario",
+      "active": true
+    },
+    {
+      "id": 4,
+      "username": "Patricia",
+      "password": "1234",
+      "defaultPassword": "1234",
+      "role": "Líder Almoxarife",
+      "access": "usuario",
+      "active": true
+    }
+  ],
+  "stock": [
+    {
+      "id": "f91f7194-1f11-4375-bdbe-8d7835db7a11",
+      "code": "TB-2040",
+      "description": "Tubo de arrefecimento",
+      "quantity": 120,
+      "street": "A",
+      "address": "A-01-02",
+      "level": "1"
+    },
+    {
+      "id": "16b66bfb-a0e8-45ae-adc2-c9a8853737ad",
+      "code": "CX-104",
+      "description": "Conexão metálica",
+      "quantity": 48,
+      "street": "A",
+      "address": "A-03-01",
+      "level": "2"
+    },
+    {
+      "id": "8b9d571e-39ab-45d5-aa41-a03c6c9bf663",
+      "code": "AB-550",
+      "description": "Abraçadeira reforçada",
+      "quantity": 92,
+      "street": "B1",
+      "address": "B1-02-03",
+      "level": "2"
+    },
+    {
+      "id": "63136050-0261-4d3d-a8f3-cb2eb2228de4",
+      "code": "TN-778",
+      "description": "Terminal usinado",
+      "quantity": 65,
+      "street": "C",
+      "address": "C-01-01",
+      "level": "1"
+    },
+    {
+      "id": "1debf170-3b09-4f6f-a0a4-2d10fe991815",
+      "code": "RV-300",
+      "description": "Retentor vedação",
+      "quantity": 34,
+      "street": "RE",
+      "address": "RE-04-02",
+      "level": "3"
+    }
+  ],
+  "history": [
+    {
+      "id": "706e8a51-fb83-4f31-b366-7e1f55a6402b",
+      "timestamp": "2026-08-12T09:00:00.000Z",
+      "type": "entrada",
+      "code": "TB-2040",
+      "description": "Tubo de arrefecimento",
+      "quantity": 30,
+      "street": "A",
+      "address": "A-01-02",
+      "level": "1",
+      "destinationStreet": "",
+      "destinationAddress": "",
+      "destinationLevel": "",
+      "user": "Matheus",
+      "role": "Administrador geral",
+      "requestedBy": "Rigitec",
+      "requestedRole": "Usuário da empresa",
+      "observation": "Recebimento do fornecedor"
+    },
+    {
+      "id": "6dcde8fc-c89f-42fa-90fc-b7c0b5722baf",
+      "timestamp": "2026-08-12T11:00:00.000Z",
+      "type": "saida",
+      "code": "CX-104",
+      "description": "Conexão metálica",
+      "quantity": 12,
+      "street": "A",
+      "address": "A-03-01",
+      "level": "2",
+      "destinationStreet": "",
+      "destinationAddress": "",
+      "destinationLevel": "",
+      "user": "Daniel",
+      "role": "Almoxarifado B",
+      "requestedBy": "Rigitec",
+      "requestedRole": "Usuário da empresa",
+      "observation": "Separação para produção"
+    },
+    {
+      "id": "495486af-6b0d-4091-a89f-a5c99e6e2a88",
+      "timestamp": "2026-08-12T13:00:00.000Z",
+      "type": "transferencia",
+      "code": "AB-550",
+      "description": "Abraçadeira reforçada",
+      "quantity": 18,
+      "street": "B1",
+      "address": "B1-02-03",
+      "level": "2",
+      "destinationStreet": "RE",
+      "destinationAddress": "RE-02-01",
+      "destinationLevel": "2",
+      "user": "Patricia",
+      "role": "Líder Almoxarife",
+      "requestedBy": "Rigitec",
+      "requestedRole": "Usuário da empresa",
+      "observation": "Ajuste entre ruas"
+    }
+  ]
+}
