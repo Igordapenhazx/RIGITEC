@@ -586,6 +586,52 @@
       margin-bottom: 16px;
     }
 
+    .location-suggestions {
+      display: grid;
+      gap: 12px;
+      padding: 16px;
+      border-radius: 18px;
+      border: 1px solid rgba(215, 25, 32, 0.08);
+      background: rgba(255, 255, 255, 0.78);
+    }
+
+    .location-suggestions-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .location-suggestions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 10px;
+    }
+
+    .location-suggestion {
+      text-align: left;
+      padding: 12px 14px;
+      background: #fff;
+      border: 1px solid rgba(22, 101, 52, 0.16);
+      color: var(--text);
+    }
+
+    .location-suggestion strong,
+    .location-suggestion small {
+      display: block;
+    }
+
+    .location-suggestion small {
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .location-suggestion:hover {
+      border-color: rgba(22, 101, 52, 0.35);
+      background: rgba(22, 101, 52, 0.04);
+    }
+
     @media (max-width: 1100px) {
       .dashboard-screen {
         grid-template-columns: 1fr;
@@ -671,9 +717,9 @@
       <aside class="sidebar">
         <div>
           <div class="brand-box">
-            <p class="eyebrow">Rigitec</p>
-            <h3>Central de Estoque</h3>
-            <p class="subtitle">Toda a interface agora consome o fluxo real do banco de dados.</p>
+            <p class="eyebrow">RIGITEC</p>
+            <h3>ESTOQUE ALMOXARIFADO 11</h3>
+            <p class="subtitle">Informações em tempo real na palma da sua mão.</p>
           </div>
 
           <nav class="menu" style="margin-top: 18px;">
@@ -703,8 +749,11 @@
           </div>
 
           <div class="topbar-actions">
-            <div class="status-chip">Supabase online</div>
-            <div class="status-chip">Renderização sem mock</div>
+            <div class="status-chip">Capivari/SP/Brasil:
+Rodovia do Açucar, Km 129,5 – Bairro Caraça
+Cep: 13.360-000 – Caixa Postal: 142
++55 (19) 3492-9100</div>
+            <div class="status-chip">Qualidade certificada pelo IATF TS 16.949</div>
           </div>
         </header>
 
@@ -728,12 +777,12 @@
 
             <div class="welcome-side">
               <div class="summary-item">
-                <strong>Resumo vivo</strong>
-                <small>Os cartões abaixo são recalculados sempre a partir de `state.stock` e `state.history`.</small>
+                <strong>EMPRESA</strong>
+                <small>RIGITEC`.</small>
               </div>
               <div class="summary-item">
-                <strong>Sem placeholders</strong>
-                <small>Nenhum saldo, nenhuma movimentação e nenhum código fixo ficam presos no HTML.</small>
+                <strong>CRIADOR DO SISTEMA</strong>
+                <small>Matheus Sebastiao</small>
               </div>
             </div>
           </article>
@@ -796,7 +845,7 @@
                 <p class="card-kicker">Movimentação controlada</p>
                 <h3>Lançar entrada, saída ou transferência</h3>
               </div>
-              <span class="tag">Validação com Supabase</span>
+              <span class="tag">ALMOXARIFADO DE COMPONENTES</span>
             </div>
 
             <p class="admin-note">
@@ -854,6 +903,8 @@
                   <option value="4">Nível 4</option>
                 </select>
               </label>
+
+              <div id="freeLocationSuggestions" class="full-span location-suggestions" aria-live="polite"></div>
 
               <label class="transfer-only hidden">
                 Rua de destino

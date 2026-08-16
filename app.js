@@ -267,7 +267,7 @@ function normalizeHistoryRecord(row) {
   );
   const origin = parseLocation(row.origem ?? row.origin ?? "");
   const destination = parseLocation(row.destino ?? row.destination ?? "");
-  const type = normalizeType(row.movimentacao_ ?? row.type ?? "");
+  const type = normalizeType(row.movimentacao ?? row.movimentacao_ ?? row.type ?? "");
   const quantity = Number(row.quantidade ?? row.quantity ?? 0);
 
   return {
@@ -397,6 +397,122 @@ function countDistinctCodesInLocation(street, address, level) {
   );
   return codes;
 }
+
+function getKnownLocations() {
+  const locations = new Map();
+
+  const addLocation = (street, address, level) => {
+    const normalizedStreet = normalizeText(street);
+    const normalizedAddress = normalizeText(address).toUpperCase();
+    const normalizedLevel = normalizeText(level);
+
+    if (!normalizedStreet || !normalizedAddress) return;
+
+    const key = `${normalizedStreet}||${normalizedAddress}||${normalizedLevel || "-"}`;
+    if (!locations.has(key)) {
+      locations.set(key, {
+        street: normalizedStreet,
+        address: normalizedAddress,
+        level: normalizedLevel || "-"
+      });
+    }
+  };
+
+  state.history.forEach((item) => {
+    addLocation(item.street, item.address, item.level);
+    addLocation(item.destinationStreet, item.destinationAddress, item.destinationLevel);
+  });
+
+  state.stock.forEach((item) => {
+    addLocation(item.street, item.address, item.level);
+  });
+
+  return [...locations.values()];
+}
+
+function getFreeLocationSuggestions() {
+  const code = normalizeText(pieceCodeInput?.value).toUpperCase();
+  const knownLocations = getKnownLocations();
+
+  return knownLocations
+    .map((location) => {
+      const codes = countDistinctCodesInLocation(location.street, location.address, location.level);
+      const hasCurrentCode = code ? codes.has(code) : false;
+
+      return {
+        ...location,
+        codesCount: codes.size,
+        available: hasCurrentCode || codes.size < 3,
+        hasCurrentCode
+      };
+    })
+    .filter((location) => location.available)
+    .sort((a, b) => {
+      if (a.hasCurrentCode !== b.hasCurrentCode) return a.hasCurrentCode ? -1 : 1;
+      if (a.codesCount !== b.codesCount) return a.codesCount - b.codesCount;
+      if (a.street !== b.street) return a.street.localeCompare(b.street);
+      if (a.address !== b.address) return a.address.localeCompare(b.address);
+      return a.level.localeCompare(b.level);
+    })
+    .slice(0, 12);
+}
+
+function renderFreeLocationSuggestions() {
+  const target = document.getElementById("freeLocationSuggestions");
+  if (!target) return;
+
+  const code = normalizeText(pieceCodeInput?.value).toUpperCase();
+  const suggestions = getFreeLocationSuggestions();
+
+  if (!code) {
+    target.innerHTML = `
+      <div class="location-suggestions-header">
+        <strong>Endereços/prateleiras disponíveis</strong>
+        <small>Digite o código para receber sugestões de posições livres.</small>
+      </div>
+    `;
+    return;
+  }
+
+  if (!suggestions.length) {
+    target.innerHTML = `
+      <div class="location-suggestions-header">
+        <strong>Nenhuma posição livre encontrada</strong>
+        <small>As posições conhecidas já estão com 3 códigos diferentes.</small>
+      </div>
+    `;
+    return;
+  }
+
+  target.innerHTML = `
+    <div class="location-suggestions-header">
+      <strong>Endereços e prateleiras livres</strong>
+      <small>Clique em uma sugestão para preencher rua, endereço e nível.</small>
+    </div>
+    <div class="location-suggestions-grid">
+      ${suggestions.map((item) => `
+        <button type="button" class="location-suggestion"
+          data-suggestion-street="${escapeHtml(item.street)}"
+          data-suggestion-address="${escapeHtml(item.address)}"
+          data-suggestion-level="${escapeHtml(item.level)}">
+          <strong>Rua ${escapeHtml(item.street)} • ${escapeHtml(item.address)}</strong>
+          <small>Prateleira/Nível ${escapeHtml(item.level)} • ${item.codesCount}/3 códigos</small>
+          <small>${item.hasCurrentCode ? "Este código já está nesta posição" : "Posição livre para novo código"}</small>
+        </button>
+      `).join("")}
+    </div>
+  `;
+
+  target.querySelectorAll(".location-suggestion").forEach((button) => {
+    button.addEventListener("click", () => {
+      document.getElementById("street").value = button.dataset.suggestionStreet;
+      document.getElementById("address").value = button.dataset.suggestionAddress;
+      document.getElementById("level").value = button.dataset.suggestionLevel;
+      showAlert(`Posição selecionada: Rua ${button.dataset.suggestionStreet} / ${button.dataset.suggestionAddress} / nível ${button.dataset.suggestionLevel}.`, "success");
+    });
+  });
+}
+
 
 function getFilteredHistory() {
   const period = auditPeriod?.value || "all";
@@ -1072,7 +1188,13 @@ document.querySelectorAll(".menu-btn").forEach((button) => {
   button.addEventListener("click", () => switchView(button.dataset.view));
 });
 
-movementType.addEventListener("change", toggleTransferFields);
+movementType.addEventListener("change", () => {
+  toggleTransferFields();
+  renderFreeLocationSuggestions();
+});
+document.getElementById("street").addEventListener("change", renderFreeLocationSuggestions);
+document.getElementById("address").addEventListener("input", renderFreeLocationSuggestions);
+document.getElementById("level").addEventListener("change", renderFreeLocationSuggestions);
 stockSearch.addEventListener("input", renderStockMap);
 streetFilter.addEventListener("change", renderStockMap);
 auditPeriod.addEventListener("change", () => {
